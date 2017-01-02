@@ -1,0 +1,90 @@
+#! /usr/bin/perl
+
+# Best practice
+use strict;
+use warnings;
+
+# Load POSIX
+use POSIX qw(EXIT_SUCCESS EXIT_FAILURE);
+
+# Load CSS::Packer
+use JavaScript::Packer;
+
+# Init compress
+my $compress = 'best'; #clean, shrink, obfuscate or best
+
+#TODO: see how to handle theses options in a hash
+
+# Init copyright
+my $copyright = '';
+
+# Init remove_copyright
+my $remove_copyright = 1;
+
+# Init no_compress_comment
+my $no_compress_comment = 1;
+
+# Filter options
+@ARGV = map { if ($_ eq '-c' || $_ eq '--clean') { $compress = 'clean'; (); } elsif ($_ eq '-s' || $_ eq '--shrink') { $compress = 'shrink'; (); } elsif ($_ eq '-o' || $_ eq '--obfuscate') { $compress = 'obfuscate'; (); } elsif ($_ eq '-b' || $_ eq '--best') { $compress = 'best'; (); } else { $_; } } @ARGV;
+
+# Show usage with invalid argument or stdin opened to a tty
+if (scalar(@ARGV) || -t STDIN) {
+	print "Usage: $0 [-c|--clean|-s|--shrink|-o|--obfuscate|-b|--best] < input.js > output.js\n";
+	exit EXIT_FAILURE;
+}
+
+# Instantiate packer object
+my $packer = JavaScript::Packer->init();
+
+# Load input in variable
+my $input = do { local $/; <STDIN> };
+
+# Minify input with required compression
+$packer->minify(\$input, { copyright => $copyright, remove_copyright => $remove_copyright, no_compress_comment => $no_compress_comment, compress => $compress });
+
+# Show result
+print $input;
+
+# Exit with success
+exit EXIT_SUCCESS;
+
+__END__
+
+=head1 NAME
+
+Jpack - A simple perl JavaScript minifier
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 DESCRIPTION
+
+A fast pure Perl JavaScript minifier script.
+
+=head1 AUTHOR
+
+Raphaël Gertz (Rapsys) << <git at rapsys.eu> >>.
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2016 - 2017 Raphaël Gertz, all rights reserved.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=head1 SEE ALSO
+
+L<JavaScript::Packer>
+
+=cut

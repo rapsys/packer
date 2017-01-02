@@ -1,0 +1,79 @@
+#! /usr/bin/perl
+
+# Best practice
+use strict;
+use warnings;
+
+# Load POSIX
+use POSIX qw(EXIT_SUCCESS EXIT_FAILURE);
+
+# Load CSS::Packer
+use CSS::Packer;
+
+# Init compress
+my $compress = 'pretty';
+
+# Filter options
+@ARGV = map { if ($_ eq '-p' || $_ eq '--pretty') { $compress = 'pretty'; (); } elsif ($_ eq '-m' || $_ eq '--minify') { $compress = 'minify'; (); } else { $_; } } @ARGV;
+
+# Show usage with invalid argument or stdin opened to a tty
+if (scalar(@ARGV) || -t STDIN) {
+	print "Usage: $0 [-p|--pretty|-m|--minify] < input.css > output.css\n";
+	exit EXIT_FAILURE;
+}
+
+# Instantiate packer object
+my $packer = CSS::Packer->init();
+
+# Load input in variable
+my $input = do { local $/; <STDIN> };
+
+# Minify input with required compression
+$packer->minify(\$input, compress => $compress);
+
+# Show result
+print $input;
+
+# Exit with success
+exit EXIT_SUCCESS;
+
+__END__
+
+=head1 NAME
+
+Cpack - A simple perl CSS minifier
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 DESCRIPTION
+
+A fast pure Perl CSS minifier script.
+
+=head1 AUTHOR
+
+Raphaël Gertz (Rapsys) << <git at rapsys.eu> >>.
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2016 - 2017 Raphaël Gertz, all rights reserved.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+=head1 SEE ALSO
+
+L<CSS::Packer>
+
+=cut
