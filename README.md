@@ -57,9 +57,9 @@ Use cpack and jpack binaries
 To use local binaries you may execute the following commands:
 
 ```console
-# cpack < input.css > output.css
+$ cpack < input.css > output.css
 ```
 
 ```console
-# jpack < input.js > output.js
+$ jpack < input.js > output.js
 ```
