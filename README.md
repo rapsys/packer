@@ -13,8 +13,8 @@ Patches are welcomed and grant credit when requested.
 Installation
 ============
 
-Install local binary
---------------------
+Install cpack and jpack binaries
+--------------------------------
 
 You need to have cpack and jpack scripts from this repository
 set as executable and installed in /usr/local/bin.
@@ -51,8 +51,8 @@ following command:
 # cp cpack jpack /usr/local/bin/
 ```
 
-Use local binary
-----------------
+Use cpack and jpack binaries
+----------------------------
 
 To use local binaries you may execute the following commands:
 
